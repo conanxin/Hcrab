@@ -1,0 +1,24 @@
+server {
+    listen   80 ;
+    server_name d.jaylab.org download.jaylab.org;
+
+    access_log /home/jay/websites/download.jaylab.org/log/access.log;
+
+    location /yt/ {
+        add_header Content-Disposition "attachment";
+        root /home/jay/websites/download.jaylab.org/;
+    }
+
+    location /static_root/ {
+        root /home/jay/websites/download.jaylab.org/jaylab/static_root/;
+        rewrite ^/static_root/(.*)$ /$1 break;
+    }
+
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+
+        proxy_pass http://127.0.0.1:8000;
+    }
+}

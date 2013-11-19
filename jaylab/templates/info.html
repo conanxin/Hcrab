@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+{% if interval %}
+    <meta http-equiv="Refresh" content="{{ interval }};url={{ back_url }}"/>
+{% endif %}
+
+<title>网站消息</title>
+<style type="text/css">
+    body { font: 14px/1 Trebuchet MS, Arial, Tahoma, Helvetica, sans-serif; text-align:center; margin-top:50px; }
+    .content { width:600px; border:1px solid #CCC; background:#FFFFCC;
+               padding:20px 20px 20px 100px; margin:auto; text-align:left;}
+</style>
+</head>
+<body>
+    <div class="content">
+        <p>
+            {% if interval %}
+                <p><strong>{{ info }}</strong></p>
+                <p><strong>{{ interval }}秒钟后自动跳转返回 。。。</strong></p>
+            {% else %}
+                <strong>{{ info }}</strong>
+            {% endif %}
+        </p>
+        <p>
+        </p>
+        <p>
+            {% if back_url %}
+                <a href="{{ back_url }}">返回</a>
+            {% else %}
+                <a href="javascript: history.back();">返回</a>
+            {% endif %}
+            &nbsp;|&nbsp;<a href="/">首页</a>
+        </p>
+    </div>
+</body>
+</html>

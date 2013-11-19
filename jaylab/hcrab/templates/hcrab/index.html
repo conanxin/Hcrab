@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>寄居蟹Hcrab：Youtube视频离线下载服务</title>
+<meta name="description" content="寄居蟹Hcrab是离线下载youtube视频的web服务。你只需要提交一个Youtube视频的观看地址，寄居蟹Hcrab会把这个视频下载到我们的服务器，然后你就可以用迅雷之类的下载工具从我们服务器下载到这个视频。">
+<link href="/static_root/bootstrap231/css/bootstrap.min.css" rel="stylesheet">
+<link href="/static_root/css/flat-ui.css" rel="stylesheet">
+<style type="text/css">
+/* Sticky footer styles
+-------------------------------------------------- */
+html,
+body {
+height: 100%;
+/* The html and body elements cannot have any padding or margin. */
+}
+/* Wrapper for page content to push down footer */
+#wrap {
+min-height: 100%;
+height: auto !important;
+height: 100%;
+/* Negative indent footer by it's height */
+margin: 0 auto -60px;
+}
+/* Set the fixed height of the footer here */
+#push,
+  #footer {
+    height: 60px;
+  }
+  #footer {
+    background-color: #f5f5f5;
+  }
+/* Custom page CSS
+  -------------------------------------------------- */
+  /* Not required for template or sticky footer method. */
+
+  .container {
+    width: auto;
+    max-width: 800px;
+  }
+  .container .credit {
+    margin: 20px 0;
+  }
+</style>
+</head>
+<body>
+    <!-- Part 1: Wrap all page content here -->
+    <div id="wrap">
+      <!-- Begin page content -->
+      <div class="container">
+        <div class="page-header" style="border-bottom:0px">
+        <h3 style="font-size:14px;color:black"> <img src="/static_root/hcrab_logo.png" style="height:98px; vertical-align:bottom"/>: YouTube视频离线下载器</h3>
+        </div>
+    <p style="font-size:11px"><span class="fui-volume-16"></span> 广告：也许你会有兴趣试用下 <a href="http://www.jayproxy.net/?source=hcrab">Jayproxy </a> :-)<p>
+    <form action="{%url 'add' %}" method="post" class="form-inline">{% csrf_token %}
+        <label>视频网址：</label>&nbsp;
+        <input type="text" class="input-xxlarge" style="width:575px" name="url" placeholder="比如：http://www.youtube.com/watch?v=8UjcqCx1Bvg">
+        &nbsp;&nbsp;
+        <input type="checkbox" name="is_hd">&nbsp;高清
+        &nbsp;&nbsp;
+        <button type="submit" class="btn">下载</button>
+    </form>
+    <div class="tooltips pull-right">
+    <a title="" data-toggle="tooltip" href="#" data-original-title="原理：提交一个Youtube视频的观看地址，HCrab会把这个视频下载到Jaylab的服务器。然后，直接用迅雷之类的下载工具从Jaylab的服务器下载这个视频就ok了。在2小时内下载，过期自动删除。">
+        帮助
+    </a>
+    &nbsp;&nbsp;
+    {% if is_dropbox_user %}
+        <a href="#">已连接到Dropbox</a>
+    {% else %}
+        <a data-toggle="tooltip" data-original-title="由于服务器资源有限，暂时暂停dropbox同步支持，sorry :(" href="#">
+            连接Dropbox
+        </a>
+    {% endif %}
+    &nbsp;&nbsp;
+<a href="/guestbook/">反馈</a>
+    &nbsp;&nbsp;
+<!--<a href="http://www.jayproxy.com">Jayproxy</a>-->
+<!--<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank">分享到</a> -->
+    </div>
+    <br/><br/>
+    {%if records%}
+    <h4>下载列表</h4>
+    <table class="table table-striped">
+    <thead>
+    <tr>
+    <th>提交时间</th>
+    <th>Youtube链接</th>
+    <th>标题</th>
+    <th>下载链接</th>
+    </thead>
+    <tbody>
+        {%for r in records%}
+        <tr><td>{{r.created_at|date:"m-d H:i"}}</td>
+        <td><a href="http://{{r.vfile.watch_url}}">{{r.vfile.watch_url}}</a></td>
+        <td>{{r.title}}</td>
+        <td>
+            {%if r.vfile.is_downloaded %}
+            <i class="icon-ok"></i> <a href="{{r.durl}}">点击下载</a>
+            {%if r.get_srt_url%}
+            <a href="{{r.get_srt_url}}">字幕</a>
+            {%endif%}
+            {%else%}
+            <i class="icon-time"></i> {{r.durl}}
+            {%endif%}
+        </td></tr>
+        {%endfor%}
+    </tbody>
+    </table>
+    {%endif%}
+    </div>
+
+    <div id="push"></div>
+    </div>
+
+    <div id="footer">
+      <div class="container">
+      <p class="muted credit">Project <b>寄居蟹(Hermit Crab)</b> <a href="https://bitbucket.org/xiaojay/jaylab-download">code</a> Created by xiaojay@gmail.com &nbsp; &nbsp;&nbsp;&nbsp;Disk used: {{disk_used_percent}}</p>
+      </div>
+    </div>
+<!-- <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1364196486084258" charset="utf-8"></script> -->
+
+<script src="/static_root/js/jquery-1.9.1.min.js"></script>
+<script src="/static_root/bootstrap231/js/bootstrap.min.js"></script>
+<script src="/static_root/bootstrap231/js/bootstrap-tooltip.js"></script>
+<script type="text/javascript">
+$('.tooltips').tooltip({
+    selector: "a[data-toggle=tooltip]"})
+</script>
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc5f812b633baff2cdf9ab5f70c55b705' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+</body>
+</html>
